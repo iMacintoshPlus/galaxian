@@ -1,0 +1,9 @@
+[config]
+name="GalaxianFiles"
+binary="GalaxianFiles.xcframework"
+initialization="galaxian_files_init"
+deinitialization="galaxian_files_deinit"
+
+[dependencies]
+system=["Foundation.framework", "UIKit.framework", "UniformTypeIdentifiers.framework"]
+linker_flags=["-ObjC"]
