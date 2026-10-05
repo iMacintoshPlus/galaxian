@@ -26,7 +26,14 @@ if existing:
     manual = os.environ.get('GITHUB_EVENT_NAME') == 'workflow_dispatch'
     output('build', 'true' if manual else 'false')
     if manual:
-        output('sha', existing.split()[0])
+        base = run('git', 'rev-parse', 'HEAD')
+        run('git', 'config', 'user.name', 'github-actions[bot]')
+        run('git', 'config', 'user.email', '41898282+github-actions[bot]@users.noreply.github.com')
+        run('git', 'fetch', 'origin', branch)
+        run('git', 'switch', '-c', branch, 'FETCH_HEAD')
+        run('git', 'merge', '--no-edit', base)
+        run('git', 'push', 'origin', 'HEAD:refs/heads/' + branch)
+        output('sha', run('git', 'rev-parse', 'HEAD'))
         output('tag', tag)
         output('branch', branch)
     raise SystemExit(0)
