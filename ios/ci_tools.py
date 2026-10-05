@@ -6,7 +6,7 @@ import urllib.request
 import zipfile
 
 root = Path('ios/build/ci-tools').resolve()
-root.mkdir(exist_ok=True)
+root.mkdir(parents=True, exist_ok=True)
 assets = [
     ('https://github.com/godotengine/godot/releases/download/4.7.2-stable/Godot_v4.7.2-stable_macos.universal.zip', 'c58a24e31d720be9d62f60cb5627c4e695fb72f21b0cfe1bc9ccaa9a3b3ba63e', 'editor.zip'),
     ('https://github.com/godotengine/godot/releases/download/4.7.2-stable/Godot_v4.7.2-stable_export_templates.tpz', 'f298490b8d44d934be425a5a65a51bf15f422428b229a06a6e11d9ffea248011', 'templates.tpz'),
