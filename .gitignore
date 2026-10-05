@@ -12,11 +12,3 @@
 .wrangler/
 node_modules/
 __pycache__/
-
-# Reproducible iOS plugin binaries and local builds (never original game data).
-/ios/build/
-/game/ios/plugins/galaxian_files/*.a
-/game/ios/plugins/galaxian_files/*.xcframework/
-
-/.ci-tools/
-/dist/

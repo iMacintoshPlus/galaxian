@@ -1,11 +1,11 @@
-"""Download verified, pinned Godot tools ."""
+"""Download verified, pinned Godot tools."""
 import hashlib
 from pathlib import Path
 import subprocess
 import urllib.request
 import zipfile
 
-root = Path('.ci-tools').resolve()
+root = Path('ios/build/ci-tools').resolve()
 root.mkdir(exist_ok=True)
 assets = [
     ('https://github.com/godotengine/godot/releases/download/4.7.2-stable/Godot_v4.7.2-stable_macos.universal.zip', 'c58a24e31d720be9d62f60cb5627c4e695fb72f21b0cfe1bc9ccaa9a3b3ba63e', 'editor.zip'),

@@ -25,7 +25,7 @@ jobs:
       - id: candidate
         env:
           GH_TOKEN: ${{ github.token }}
-        run: python3 tools/ios/upstream_candidate.py
+        run: python3 ios/upstream_candidate.py
   build:
     needs: prepare
     if: needs.prepare.outputs.build == 'true'
@@ -42,19 +42,19 @@ jobs:
       - name: Select Xcode 26.3
         run: echo "DEVELOPER_DIR=/Applications/Xcode_26.3.app/Contents/Developer" >> "$GITHUB_ENV"
       - name: Download verified tools
-        run: python3 tools/ios/ci_tools.py
+        run: python3 ios/ci_tools.py
       - name: Install SCons
         run: python3 -m pip install scons==4.9.1
       - name: Build native picker
-        run: python3 tools/ios/build_plugin.py --godot-source .ci-tools/godot-source
+        run: python3 ios/build_plugin.py --godot-source ios/build/ci-tools/godot-source
       - name: Export Xcode and build unsigned IPA
-        run: python3 tools/ios/build_ipa.py --godot .ci-tools/Godot.app/Contents/MacOS/Godot --template .ci-tools/ios.zip --output dist/Galaxian-iOS-unsigned.ipa
+        run: python3 ios/build_ipa.py --godot ios/build/ci-tools/Godot.app/Contents/MacOS/Godot --template ios/build/ci-tools/ios.zip --output ios/build/dist/Galaxian-iOS-unsigned.ipa
       - name: Checksum
-        run: cd dist && shasum -a 256 Galaxian-iOS-unsigned.ipa > SHA256SUMS
+        run: cd ios/build/dist && shasum -a 256 Galaxian-iOS-unsigned.ipa > SHA256SUMS
       - uses: actions/upload-artifact@v4
         with:
           name: ios-candidate
-          path: dist/
+          path: ios/build/dist/
           if-no-files-found: error
           retention-days: 30
   draft:
@@ -66,7 +66,7 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: ios-candidate
-          path: dist
+          path: ios/build/dist
       - name: Create draft for manual testing and publication
         env:
           GH_TOKEN: ${{ github.token }}
@@ -77,4 +77,4 @@ jobs:
         shell: bash
         run: |
           printf '%s\n' "Unsigned iOS candidate for upstream $UPSTREAM_TAG." "" "Review branch $CANDIDATE_BRANCH and test this IPA before merging into ios and publishing this draft." "" "iOS 14.0 minimum (older-device compatibility unverified). Sign with a sideloading tool. Import your own original game IPA on first launch. Uses the Galaxian name/icon. No original game content is included." > notes.md
-          gh release create "${UPSTREAM_TAG}-ios-candidate-${GITHUB_RUN_NUMBER}" dist/* --target "$CANDIDATE_SHA" --title "iOS candidate for $UPSTREAM_TAG" --notes-file notes.md --draft --prerelease
+          gh release create "${UPSTREAM_TAG}-ios-candidate-${GITHUB_RUN_NUMBER}" ios/build/dist/* --target "$CANDIDATE_SHA" --title "iOS candidate for $UPSTREAM_TAG" --notes-file notes.md --draft --prerelease

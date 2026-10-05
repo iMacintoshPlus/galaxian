@@ -811,18 +811,7 @@ func resume_briefing_input() -> void:
 
 
 func choose_file() -> void:
-	if OS.has_feature("ios"):
-		if busy: return
-		busy = true
-		var picker := preload("res://src/input/ios_file_picker.gd").new()
-		var result: Dictionary = await picker.choose(get_tree())
-		busy = false
-		if result.has("path"):
-			await import_file(str(result.path))
-		elif result.has("error"):
-			notify(str(result.error))
-		picker.clear()
-	elif OS.has_feature("web"):
+	if OS.has_feature("web"):
 		if web_picker == null:
 			web_picker = preload("res://src/input/web_file_picker.gd").new()
 			web_picker.selected.connect(import_web_file)
