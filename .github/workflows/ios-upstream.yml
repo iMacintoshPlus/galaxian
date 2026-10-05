@@ -43,14 +43,14 @@ jobs:
           python-version: '3.12'
       - name: Select Xcode 26.3
         run: echo "DEVELOPER_DIR=/Applications/Xcode_26.3.app/Contents/Developer" >> "$GITHUB_ENV"
-      - name: Download verified tools and branding
+      - name: Download verified tools
         run: python3 tools/ios/ci_tools.py
       - name: Install SCons
         run: python3 -m pip install scons==4.9.1
       - name: Build native picker
         run: python3 tools/ios/build_plugin.py --godot-source .ci-tools/godot-source
       - name: Export Xcode and build unsigned IPA
-        run: python3 tools/ios/build_ipa.py --godot .ci-tools/Godot.app/Contents/MacOS/Godot --template .ci-tools/ios.zip --branding-directory .ci-tools/branding --output dist/Galaxian-iOS-unsigned.ipa
+        run: python3 tools/ios/build_ipa.py --godot .ci-tools/Godot.app/Contents/MacOS/Godot --template .ci-tools/ios.zip --output dist/Galaxian-iOS-unsigned.ipa
       - name: Checksum
         run: cd dist && shasum -a 256 Galaxian-iOS-unsigned.ipa > SHA256SUMS
       - uses: actions/upload-artifact@v4
@@ -78,5 +78,5 @@ jobs:
           CANDIDATE_BRANCH: ${{ needs.prepare.outputs.branch }}
         shell: bash
         run: |
-          printf '%s\n' "Unsigned iOS candidate for upstream $UPSTREAM_TAG." "" "Review branch $CANDIDATE_BRANCH and test this IPA before merging into ios and publishing this draft." "" "iOS 14.0 minimum (older-device compatibility unverified). Sign with a sideloading tool. Import your own original game IPA on first launch. Only the original Home Screen name/icon are bundled; no original game content is included." > notes.md
+          printf '%s\n' "Unsigned iOS candidate for upstream $UPSTREAM_TAG." "" "Review branch $CANDIDATE_BRANCH and test this IPA before merging into ios and publishing this draft." "" "iOS 14.0 minimum (older-device compatibility unverified). Sign with a sideloading tool. Import your own original game IPA on first launch. Uses the Galaxian name/icon. No original game content is included." > notes.md
           gh release create "${UPSTREAM_TAG}-ios-candidate-${GITHUB_RUN_NUMBER}" dist/* --target "$CANDIDATE_SHA" --title "iOS candidate for $UPSTREAM_TAG" --notes-file notes.md --draft --prerelease
