@@ -20,7 +20,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7.0.1
         with:
-          ref: ios
+          ref: master
           fetch-depth: 0
       - id: candidate
         env:
@@ -76,5 +76,5 @@ jobs:
           CANDIDATE_BRANCH: ${{ needs.prepare.outputs.branch }}
         shell: bash
         run: |
-          printf '%s\n' "Unsigned iOS candidate for upstream $UPSTREAM_TAG." "" "Review branch $CANDIDATE_BRANCH and test this IPA before merging into ios and publishing this draft." "" "iOS 14.0 minimum (older-device compatibility unverified). Sign with a sideloading tool. Import your own original game IPA on first launch. Uses the Galaxian name/icon. No original game content is included." > notes.md
+          printf '%s\n' "Unsigned iOS candidate for upstream $UPSTREAM_TAG." "" "Review branch $CANDIDATE_BRANCH and test this IPA before merging into master and publishing this draft." "" "iOS 14.0 minimum (older-device compatibility unverified). Sign with a sideloading tool. Import your own original game IPA on first launch. Uses the Galaxian name/icon. No original game content is included." > notes.md
           gh release create "${UPSTREAM_TAG}-ios-candidate-${GITHUB_RUN_NUMBER}" ios/build/dist/* --target "$CANDIDATE_SHA" --title "iOS candidate for $UPSTREAM_TAG" --notes-file notes.md --draft --prerelease

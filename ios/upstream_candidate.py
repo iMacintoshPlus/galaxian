@@ -1,4 +1,4 @@
-"""Prepare a release merge on its own branch; never merge into ios or publish."""
+"""Prepare a release merge on its own branch; never merge into master or publish."""
 import json
 import os
 from pathlib import Path
@@ -46,7 +46,7 @@ try:
     run('git', 'merge', '--no-edit', upstream_sha)
 except subprocess.CalledProcessError:
     run('git', 'merge', '--abort')
-    raise SystemExit('Upstream merge conflict. Resolve manually; ios was not modified.')
+    raise SystemExit('Upstream merge conflict. Resolve manually; master was not modified.')
 marker = Path('ios/upstream-release.json')
 marker.write_text(json.dumps({'tag': tag, 'commit': upstream_sha}, indent=2) + '\n')
 run('git', 'add', str(marker))
@@ -63,7 +63,7 @@ body = ('Candidate for upstream ' + tag + '. The workflow builds an unsigned IPA
         'Workflow: https://github.com/' + repo + '/actions/runs/' + os.environ['GITHUB_RUN_ID'])
 Path('/tmp/ios-pr-body.md').write_text(body)
 try:
-    run('gh', 'pr', 'create', '--repo', repo, '--base', 'ios', '--head', branch,
+    run('gh', 'pr', 'create', '--repo', repo, '--base', 'master', '--head', branch,
         '--title', 'iOS update for upstream ' + tag, '--body-file', '/tmp/ios-pr-body.md')
 except subprocess.CalledProcessError:
     print('PR creation unavailable. Review the candidate branch via GitHub Compare; the build will continue.')

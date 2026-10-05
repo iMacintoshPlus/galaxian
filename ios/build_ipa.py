@@ -74,6 +74,9 @@ app_info = xcode/'Galaxian/Galaxian-Info.plist'
 app_settings = plistlib.loads(app_info.read_bytes())
 app_settings['CFBundleDisplayName'] = 'Galaxian'
 app_settings['CFBundleName'] = 'Galaxian'
+# Distinguish rebuilds of the same upstream version in AltStore Classic.
+if os.environ.get('GITHUB_RUN_NUMBER'):
+    app_settings['CFBundleVersion'] = os.environ['GITHUB_RUN_NUMBER']
 for key in ('NSCameraUsageDescription', 'NSMicrophoneUsageDescription', 'NSPhotoLibraryUsageDescription'):
     if app_settings.get(key) == '':
         del app_settings[key]

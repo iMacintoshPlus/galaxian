@@ -1,0 +1,33 @@
+{
+  "name": "Galaxian",
+  "identifier": "com.imacintoshplus.galaxian.source",
+  "subtitle": "Galaxian for iOS",
+  "iconURL": "https://raw.githubusercontent.com/iMacintoshPlus/galaxian/master/ios/altstore-icon.png",
+  "website": "https://github.com/iMacintoshPlus/galaxian",
+  "apps": [
+    {
+      "name": "Galaxian",
+      "bundleIdentifier": "com.imacintoshplus.galaxian",
+      "developerName": "TheWWWorm; iOS port by iMacintoshPlus",
+      "localizedDescription": "Native iOS port of Galaxian. Import your own original Galaxy on Fire IPA on first launch. Original game content is not included.",
+      "iconURL": "https://raw.githubusercontent.com/iMacintoshPlus/galaxian/master/ios/altstore-icon.png",
+      "category": "games",
+      "versions": [
+        {
+          "version": "1.1.0",
+          "buildVersion": "1.1.0",
+          "date": "2026-10-05T15:51:49Z",
+          "localizedDescription": "Unsigned iOS build for upstream v1.1.0.\r\n\r\niOS 14.0 minimum (older-device compatibility unverified). Sign with a sideloading tool. Import your own original game IPA on first launch. No original game content is included.\r\n",
+          "downloadURL": "https://github.com/iMacintoshPlus/galaxian/releases/download/v1.1.0-ios-candidate-8/Galaxian-iOS-unsigned.ipa",
+          "size": 29367479,
+          "minOSVersion": "14.0"
+        }
+      ],
+      "appPermissions": {
+        "entitlements": [],
+        "privacy": {}
+      }
+    }
+  ],
+  "news": []
+}
