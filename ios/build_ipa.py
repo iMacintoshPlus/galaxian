@@ -8,7 +8,7 @@ from pathlib import Path
 import shutil
 import subprocess
 
-ROOT = Path(__file__).resolve().parents[2]
+ROOT = Path(__file__).resolve().parents[1]
 p = argparse.ArgumentParser(description=__doc__)
 p.add_argument('--godot', type=Path, default=Path('/Applications/Godot.app/Contents/MacOS/Godot'))
 p.add_argument('--template', type=Path, required=True, help='ios.zip from the official 4.7.2 export templates')
@@ -26,13 +26,30 @@ version = subprocess.check_output([str(a.godot), '--version'], text=True).strip(
 if version != '4.7.2.stable.official.ed1daf0bf':
     raise SystemExit('Use the official Godot 4.7.2 editor and matching templates.')
 for target in ('debug', 'release'):
-    if not (ROOT/f'game/ios/plugins/galaxian_files/GalaxianFiles.{target}.xcframework').is_dir():
+    if not (ROOT/f'ios/build/plugin/GalaxianFiles.{target}.xcframework').is_dir():
         raise SystemExit('Build the native plugin first with build_plugin.py.')
 # Never rewrite the developer checkout, its presets or its resource imports.
 build = ROOT/'ios/build/export'
 if build.exists(): shutil.rmtree(build)
 stage = build/'game'
 shutil.copytree(ROOT/'game', stage, ignore=shutil.ignore_patterns('.godot', '.DS_Store'))
+# Inject the iOS integration only into the disposable export copy. Fail loudly
+# if upstream changes this entry point, rather than silently losing file import.
+main = stage/'src/main.gd'
+anchor = 'func choose_file() -> void:\n\tif OS.has_feature("web"):\n'
+original = main.read_text()
+if original.count(anchor) != 1:
+    raise SystemExit('Upstream choose_file() changed; review ios/runtime/import_hook.txt.')
+main.write_text(original.replace(anchor, 'func choose_file() -> void:\n' +
+                                (ROOT/'ios/runtime/import_hook.txt').read_text(), 1))
+for name in ('ios_file_picker.gd', 'ios_file_picker.gd.uid'):
+    shutil.copyfile(ROOT/'ios/runtime'/name, stage/'src/input'/name)
+plugin = stage/'ios/plugins/galaxian_files'
+plugin.mkdir(parents=True)
+shutil.copyfile(ROOT/'ios/runtime/galaxian_files.gdip', plugin/'galaxian_files.gdip')
+for target in ('debug', 'release'):
+    name = f'GalaxianFiles.{target}.xcframework'
+    shutil.copytree(ROOT/'ios/build/plugin'/name, plugin/name)
 # Allow both landscape directions only in the disposable iOS project.
 project = stage/'project.godot'
 settings = re.sub(r'^window/handheld/orientation=.*\n?', '', project.read_text(), flags=re.MULTILINE)
@@ -42,8 +59,10 @@ settings = settings.replace('[display]', '[display]\nwindow/handheld/orientation
 project.write_text(settings)
 presets = stage/'export_presets.cfg'
 text = presets.read_text()
+index = max([int(n) for n in re.findall(r'\[preset\.(\d+)\]', text)], default=-1) + 1
+text += '\n' + (ROOT/'ios/export_presets.cfg').read_text().replace('preset.0', f'preset.{index}')
 path = str(a.template.resolve()).replace('\\', '\\\\').replace('"', '\\"')
-text = text.replace('[preset.6.options]', '[preset.6.options]\ncustom_template/debug="'+path+'"\ncustom_template/release="'+path+'"')
+text = text.replace(f'[preset.{index}.options]', f'[preset.{index}.options]\ncustom_template/debug="'+path+'"\ncustom_template/release="'+path+'"')
 presets.write_text(text)
 xcode = build/'xcode'
 xcode.mkdir()

@@ -5,7 +5,7 @@ import os
 from pathlib import Path
 import subprocess
 
-ROOT = Path(__file__).resolve().parents[2]
+ROOT = Path(__file__).resolve().parents[1]
 p = argparse.ArgumentParser(description=__doc__)
 p.add_argument('--godot-source', type=Path, required=True)
 p.add_argument('--scons', default='scons')
@@ -23,7 +23,7 @@ run([a.scons, 'platform=ios', 'target=template_release', 'arch=arm64',
      'core/extension/gdextension_interface.gen.h'], cwd=source)
 build = ROOT / 'ios/build/plugin'
 build.mkdir(parents=True, exist_ok=True)
-out = ROOT / 'game/ios/plugins/galaxian_files'
+out = ROOT / 'ios/build/plugin'
 for target in ('debug', 'release'):
     libraries = []
     for sdk_name, triple in [('iphoneos', 'arm64-apple-ios14.0'),
