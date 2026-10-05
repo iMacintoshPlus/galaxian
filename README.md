@@ -10,7 +10,7 @@ An iOS build forked from [TheWWWorm's independent Godot engine for **Galaxy on F
 
 ## Install and Play
 
-- **iOS:** Visit [releases](https://github.com/iMacintoshPlus/galaxian/releases/latest) and sideload the latest unsigned IPA, then choose your **original Galaxy on Fire 3D IPA** using the system file picker. iOS 14.0 or later is required; compatibility verified only on iOS 18.7.8 (iPhone 14 Pro).
+- **iOS:** Sideload the latest unsigned IPA from [releases](https://github.com/iMacintoshPlus/galaxian/releases/latest) or this [AltStore/SideStore/LiveContainer source](https://raw.githubusercontent.com/iMacintoshPlus/galaxian/refs/heads/master/ios/altstore.json), then choose your **original Galaxy on Fire 3D IPA** using the system file picker. iOS 14.0 or later is required; compatibility verified only on iOS 18.7.8 (iPhone 14 Pro).
 
 Select **Choose game IPA…**, wait for import to finish, then start or load a pilot. First import can take several minutes. Cancel stops at an import checkpoint and preserves previously installed content and saves.
 
