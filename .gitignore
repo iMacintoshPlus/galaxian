@@ -17,3 +17,6 @@ __pycache__/
 /ios/build/
 /game/ios/plugins/galaxian_files/*.a
 /game/ios/plugins/galaxian_files/*.xcframework/
+
+/.ci-tools/
+/dist/

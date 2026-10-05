@@ -27,6 +27,10 @@ def apply_branding(ipa, xcode):
         if archive.getinfo(entry).file_size > 16 * 1024 * 1024:
             raise ValueError('IPA icon is unexpectedly large.')
         icon_data = archive.read(entry)
+    apply_icon_and_name(name, icon_data, xcode)
+
+
+def apply_icon_and_name(name, icon_data, xcode):
     iconset = xcode/'Galaxian/Images.xcassets/AppIcon.appiconset'
     contents = json.loads((iconset/'Contents.json').read_text())
     with tempfile.TemporaryDirectory() as directory:

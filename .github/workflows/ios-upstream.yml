@@ -1,0 +1,82 @@
+name: Review upstream iOS release
+on:
+  schedule:
+    - cron: '23 9 * * *'
+  workflow_dispatch:
+concurrency:
+  group: ios-upstream-release
+  cancel-in-progress: false
+permissions:
+  contents: read
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    outputs:
+      build: ${{ steps.candidate.outputs.build }}
+      sha: ${{ steps.candidate.outputs.sha }}
+      tag: ${{ steps.candidate.outputs.tag }}
+      branch: ${{ steps.candidate.outputs.branch }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ios
+          fetch-depth: 0
+      - id: candidate
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 tools/ios/upstream_candidate.py
+  build:
+    needs: prepare
+    if: needs.prepare.outputs.build == 'true'
+    runs-on: macos-15
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.prepare.outputs.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Select installed Xcode
+        run: echo "DEVELOPER_DIR=$(xcode-select -p)" >> "$GITHUB_ENV"
+      - name: Download verified tools and branding
+        run: python3 tools/ios/ci_tools.py
+      - name: Install SCons
+        run: python3 -m pip install scons==4.9.1
+      - name: Build native picker
+        run: python3 tools/ios/build_plugin.py --godot-source .ci-tools/godot-source
+      - name: Export Xcode and build unsigned IPA
+        run: python3 tools/ios/build_ipa.py --godot .ci-tools/Godot.app/Contents/MacOS/Godot --template .ci-tools/ios.zip --branding-directory .ci-tools/branding --output dist/Galaxian-iOS-unsigned.ipa
+      - name: Checksum
+        run: cd dist && shasum -a 256 Galaxian-iOS-unsigned.ipa > SHA256SUMS
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ios-candidate
+          path: dist/
+          if-no-files-found: error
+          retention-days: 30
+  draft:
+    needs: [prepare, build]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: ios-candidate
+          path: dist
+      - name: Create draft for manual testing and publication
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          UPSTREAM_TAG: ${{ needs.prepare.outputs.tag }}
+          CANDIDATE_SHA: ${{ needs.prepare.outputs.sha }}
+          CANDIDATE_BRANCH: ${{ needs.prepare.outputs.branch }}
+        shell: bash
+        run: |
+          printf '%s\n' "Unsigned iOS candidate for upstream $UPSTREAM_TAG." "" "Review branch $CANDIDATE_BRANCH and test this IPA before merging into ios and publishing this draft." "" "iOS 14.0 minimum (older-device compatibility unverified). Sign with a sideloading tool. Import your own original game IPA on first launch. Only the original Home Screen name/icon are bundled; no original game content is included." > notes.md
+          gh release create "${UPSTREAM_TAG}-ios-candidate-${GITHUB_RUN_NUMBER}" dist/* --target "$CANDIDATE_SHA" --title "iOS candidate for $UPSTREAM_TAG" --notes-file notes.md --draft --prerelease

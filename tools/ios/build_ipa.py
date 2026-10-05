@@ -14,6 +14,7 @@ p.add_argument('--godot', type=Path, default=Path('/Applications/Godot.app/Conte
 p.add_argument('--template', type=Path, required=True, help='ios.zip from the official 4.7.2 export templates')
 p.add_argument('--output', type=Path, default=Path('Galaxian-iOS-unsigned.ipa'))
 p.add_argument('--simulator-library', type=Path, help='Optional matching ARM64 simulator libgodot.a built from source')
+p.add_argument('--branding-directory', type=Path, help='Directory containing branding.json and icon.png, without any game archive')
 p.add_argument('--branding-ipa', type=Path, help='Local original IPA supplying only the Home Screen name and icon')
 p.add_argument('--export-only', action='store_true', help='Prepare Xcode project for interactive simulator testing')
 a = p.parse_args()
@@ -74,6 +75,11 @@ if a.simulator_library:
             shutil.copyfile(library, framework/entry['LibraryIdentifier']/entry['LibraryPath'])
             entry['SupportedArchitectures'] = ['arm64']
     (framework/'Info.plist').write_bytes(plistlib.dumps(info))
+if a.branding_directory:
+    import json
+    from ipa_branding import apply_icon_and_name
+    branding = json.loads((a.branding_directory/'branding.json').read_text())
+    apply_icon_and_name(branding['name'], (a.branding_directory/'icon.png').read_bytes(), xcode)
 if a.branding_ipa:
     from ipa_branding import apply_branding
     apply_branding(a.branding_ipa, xcode)
