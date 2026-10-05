@@ -1,7 +1,5 @@
 name: Review upstream iOS release
 on:
-  schedule:
-    - cron: '23 9 * * *'
   workflow_dispatch:
 concurrency:
   group: ios-upstream-release
