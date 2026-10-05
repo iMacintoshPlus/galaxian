@@ -1,4 +1,4 @@
-"""Download verified, pinned Godot tools and the release's name/icon-only bundle."""
+"""Download verified, pinned Godot tools ."""
 import hashlib
 from pathlib import Path
 import subprocess
@@ -10,7 +10,6 @@ root.mkdir(exist_ok=True)
 assets = [
     ('https://github.com/godotengine/godot/releases/download/4.7.2-stable/Godot_v4.7.2-stable_macos.universal.zip', 'c58a24e31d720be9d62f60cb5627c4e695fb72f21b0cfe1bc9ccaa9a3b3ba63e', 'editor.zip'),
     ('https://github.com/godotengine/godot/releases/download/4.7.2-stable/Godot_v4.7.2-stable_export_templates.tpz', 'f298490b8d44d934be425a5a65a51bf15f422428b229a06a6e11d9ffea248011', 'templates.tpz'),
-    ('https://github.com/iMacintoshPlus/galaxian/releases/download/v1.1.0-ios.1/ios-branding.zip', '9d18b72f46795938d37a6f420f196cc2723cbaee760c37d6a3349d43411f5257', 'branding.zip'),
 ]
 for url, digest, name in assets:
     path = root/name
@@ -23,10 +22,6 @@ for url, digest, name in assets:
 subprocess.run(['ditto', '-x', '-k', str(root/'editor.zip'), str(root)], check=True)
 with zipfile.ZipFile(root/'templates.tpz') as archive:
     (root/'ios.zip').write_bytes(archive.read('templates/ios.zip'))
-(root/'branding').mkdir(exist_ok=True)
-with zipfile.ZipFile(root/'branding.zip') as archive:
-    for name in ('branding.json', 'icon.png'):
-        (root/'branding'/name).write_bytes(archive.read(name))
 if not (root/'godot-source').exists():
     subprocess.run(['git', 'clone', '--depth', '1', '--branch', '4.7.2-stable',
                     'https://github.com/godotengine/godot.git', str(root/'godot-source')], check=True)

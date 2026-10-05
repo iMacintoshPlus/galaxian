@@ -59,6 +59,8 @@ for key in ('NSCameraUsageDescription', 'NSMicrophoneUsageDescription', 'NSPhoto
     if app_settings.get(key) == '':
         del app_settings[key]
 app_info.write_bytes(plistlib.dumps(app_settings, sort_keys=False))
+for localized in (xcode/'Galaxian').glob('*.lproj/InfoPlist.strings'):
+    localized.write_text('"CFBundleDisplayName" = "Galaxian";\n')
 # Godot's exported project always links MoltenVK, which needs these frameworks
 # even for the Compatibility renderer. Keep this fix in generated build files.
 pbx = xcode/'Galaxian.xcodeproj/project.pbxproj'
