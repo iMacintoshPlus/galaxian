@@ -18,7 +18,7 @@ For more information, please refer to the original [README](https://github.com/T
 | --- | --- | --- |
 | iOS 14.0+ | `…-ios.ipa` | Sideload the IPA, then open `Galaxian`. |
 
-1. Download the latest IPA from [here](https://github.com/iMacintoshPlus/galaxian/releases/latest) and install using your preferred sideloading method. AltStore/SideStore/LiveContainer users can add `https://raw.githubusercontent.com/iMacintoshPlus/altstore-source/main/source.json` as a source. The app was compiled with the iOS 26.2 SDK and supports 14.0 and later, but compatibility is only currently verified on 18.7.8 (iPhone 14 Pro).
+1. **Download the latest IPA from [here](https://github.com/iMacintoshPlus/galaxian/releases/latest) and install using your preferred sideloading method. AltStore/SideStore/LiveContainer users can add `https://raw.githubusercontent.com/iMacintoshPlus/altstore-source/main/source.json` as a source.** The app was compiled with the iOS 26.2 SDK and supports 14.0 and later, but compatibility is only currently verified on 18.7.8 (iPhone 14 Pro).
 
 2. Select **Choose game IPA…**, choose your original *Galaxy on Fire 3D* IPA using the system file picker, wait for import to finish, then start or load a pilot. First import can take several minutes. Cancel stops at an import checkpoint and preserves previously installed content and saves.
 
