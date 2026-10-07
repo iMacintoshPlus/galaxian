@@ -48,9 +48,11 @@ jobs:
       - name: Build native picker
         run: python3 ios/build_plugin.py --godot-source ios/build/ci-tools/godot-source
       - name: Export Xcode and build unsigned IPA
-        run: python3 ios/build_ipa.py --godot ios/build/ci-tools/Godot.app/Contents/MacOS/Godot --template ios/build/ci-tools/ios.zip --output ios/build/dist/Galaxian-iOS-unsigned.ipa
+        env:
+          UPSTREAM_TAG: ${{ needs.prepare.outputs.tag }}
+        run: python3 ios/build_ipa.py --godot ios/build/ci-tools/Godot.app/Contents/MacOS/Godot --template ios/build/ci-tools/ios.zip --output "ios/build/dist/gof1-${UPSTREAM_TAG#v}-ios.ipa"
       - name: Checksum
-        run: cd ios/build/dist && shasum -a 256 Galaxian-iOS-unsigned.ipa > SHA256SUMS
+        run: cd ios/build/dist && shasum -a 256 *.ipa > SHA256SUMS
       - uses: actions/upload-artifact@v7.0.1
         with:
           name: ios-candidate

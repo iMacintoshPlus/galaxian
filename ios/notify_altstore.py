@@ -2,6 +2,7 @@
 """Notify the shared AltStore repository after a manually published release."""
 import json
 import os
+import re
 from pathlib import Path
 import subprocess
 
@@ -19,7 +20,10 @@ release = json.loads(subprocess.check_output(['gh', 'release', 'view', tag, '--r
                                             '--json', 'isDraft,assets,tagName'], text=True))
 if release['isDraft']:
     raise SystemExit('Draft releases cannot be sent to AltStore')
-if not any(a['name'] == name + '-iOS-unsigned.ipa' for a in release['assets']):
+prefix = {'abyssal': 'abyssal-engine-', 'galaxian': 'gof1-'}[app]
+pattern = re.escape(prefix) + r'[0-9][A-Za-z0-9._+-]*-ios\.ipa'
+if not any(a['name'] == name + '-iOS-unsigned.ipa' or re.fullmatch(pattern, a['name'])
+           for a in release['assets']):
     raise SystemExit('Published release has no unsigned iOS IPA')
 root = Path(os.environ['GITHUB_WORKSPACE']) / 'altstore-source'
 request = root / 'requests' / (app + '.json')
