@@ -1,6 +1,6 @@
-# Galaxy on Fire *Native Remake*
+# *Galaxy on Fire* Native Remake
 
-An iOS build forked from [TheWWWorm's independent Godot engine for **Galaxy on Fire 3D**](https://github.com/TheWWWorm/galaxian). Supply your own compatible IPA; the engine imports its ships, environments, artwork, music, text, missions and catalogues locally. No original game content is included.
+An iOS build forked from [TheWWWorm's independent Godot engine for *Galaxy on Fire 3D*](https://github.com/TheWWWorm/galaxian). Supply your own compatible IPA; the engine imports its ships, environments, artwork, music, text, missions and catalogues locally. No original game content is included.
 
 ## Screenshots
 
@@ -12,7 +12,7 @@ An iOS build forked from [TheWWWorm's independent Godot engine for **Galaxy on F
 
 1. Download the latest unsigned IPA from [releases](https://github.com/iMacintoshPlus/galaxian/releases/latest) or add `https://raw.githubusercontent.com/iMacintoshPlus/altstore-source/main/source.json` to AltStore/SideStore/LiveContainer, then sideload the app. iOS 14.0 or later is required; compatibility verified only on iOS 18.7.8 (iPhone 14 Pro).
 
-2. Select **Choose game IPA…**, choose your original Galaxy on Fire 3D IPA using the system file picker, wait for import to finish, then start or load a pilot. First import can take several minutes. Cancel stops at an import checkpoint and preserves previously installed content and saves.
+2. Select **Choose game IPA…**, choose your original *Galaxy on Fire 3D* IPA using the system file picker, wait for import to finish, then start or load a pilot. First import can take several minutes. Cancel stops at an import checkpoint and preserves previously installed content and saves.
 
 ### Compatible Game Files
 
