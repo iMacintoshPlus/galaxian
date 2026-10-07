@@ -26,4 +26,4 @@ The validated archive identifies itself as iPhone **1.1.5**. Acceptance is based
 
 This project is an unofficial fork containing AI-assisted changes and is not affiliated with or endorsed by [TheWWWorm](https://github.com/TheWWWorm). Please direct all donations to [ko-fi.com/wwworm](https://ko-fi.com/wwworm).
 
-Engine code is Apache-2.0: [License](LICENSE.md), [Attribution](THIRD_PARTY_NOTICES.md). Original content and trademarks belong to their rights holders. This is not an official Fishlabs release, and the engine license grants no rights to game assets. File formats and behavior were investigated using supplied games; this is not a clean-room claim.
+Engine code is Apache-2.0: [License](LICENSE.md), [Attribution](THIRD_PARTY_NOTICES.md). Original content and trademarks belong to their rights holders. This is not an official FISHLABS release, and the engine license grants no rights to game assets. File formats and behavior were investigated using supplied games; this is not a clean-room claim.
